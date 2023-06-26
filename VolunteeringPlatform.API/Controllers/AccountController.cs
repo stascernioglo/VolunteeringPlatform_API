@@ -64,7 +64,7 @@ namespace VolunteeringPlatform.API.Controllers
             }
             else
             {
-                user.ImageUrl = "https://mystorageaccountfortests.blob.core.windows.net/users/default.png";
+                user.ImageUrl = "https://utmstorageaccount.blob.core.windows.net/users/default.png";
             }
 
             var result = await _userManager.CreateAsync(user, userForRegisterDto.Password);
@@ -103,7 +103,7 @@ namespace VolunteeringPlatform.API.Controllers
             }
             else
             {
-                user.ImageUrl = "https://mystorageaccountfortests.blob.core.windows.net/projects/default.png";
+                user.ImageUrl = "https://utmstorageaccount.blob.core.windows.net/projects/default.png";
             }
 
             var result = await _userManager.CreateAsync(user, organizationForRegisterDto.Password);
@@ -142,7 +142,7 @@ namespace VolunteeringPlatform.API.Controllers
             }
             else
             {
-                user.ImageUrl = "https://mystorageaccountfortests.blob.core.windows.net/users/default.png";
+                user.ImageUrl = "https://utmstorageaccount.blob.core.windows.net/users/default.png";
             }
 
             var result = await _userManager.CreateAsync(user, volunteerForRegisterDto.Password);

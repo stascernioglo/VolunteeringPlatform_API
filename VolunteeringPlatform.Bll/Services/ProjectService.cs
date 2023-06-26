@@ -33,7 +33,7 @@ namespace VolunteeringPlatform.Bll.Services
             }
             else
             {
-                project.ImageUrl = "https://mystorageaccountfortests.blob.core.windows.net/projects/default.png";
+                project.ImageUrl = "https://utmstorageaccount.blob.core.windows.net/projects/default.png";
             }
             
             _repository.Add(project);

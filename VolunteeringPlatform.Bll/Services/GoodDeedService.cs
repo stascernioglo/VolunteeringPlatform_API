@@ -33,7 +33,7 @@ namespace VolunteeringPlatform.Bll.Services
             }
             else
             {
-                goodDeed.ImageUrl = "https://mystorageaccountfortests.blob.core.windows.net/gooddeeds/default.png";
+                goodDeed.ImageUrl = "https://utmstorageaccount.blob.core.windows.net/gooddeeds/default.png";
             }
 
             _repository.Add(goodDeed);
