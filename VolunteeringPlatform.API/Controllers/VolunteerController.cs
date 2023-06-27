@@ -54,7 +54,7 @@ namespace VolunteeringPlatform.API.Controllers
 
             var volunteerId = User.GetLoggedInUserId();
 
-            await _volunteerService.ParticipateInProjectAsync(goodDeedId, volunteerId, cancellationToken);
+            await _volunteerService.ParticipateInGoodDeedAsync(goodDeedId, volunteerId, cancellationToken);
             return Ok();
         }
     }
