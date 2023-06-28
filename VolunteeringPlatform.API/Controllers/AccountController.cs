@@ -1,11 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VolunteeringPlatform.Bll.Interfaces;
 using VolunteeringPlatform.Common.Dtos.Account;
-using VolunteeringPlatform.Dal.Constants;
-using VolunteeringPlatform.Domain.Auth;
 
 namespace VolunteeringPlatform.API.Controllers
 {
@@ -13,23 +9,18 @@ namespace VolunteeringPlatform.API.Controllers
     [Route("api/account")]
     public class AccountController : BaseController
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
-        private readonly IAzureStorageService _azureStorageService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IRegistrationService _registrationService;
         private readonly ITokenService _tokenService;
-        private readonly IMapper _mapper;
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager,
-            IAzureStorageService azureStorageService, IAuthenticationService authenticationService,
-            ITokenService tokenService, IMapper mapper)
+        public AccountController(
+            IAuthenticationService authenticationService,
+            IRegistrationService registrationService,
+            ITokenService tokenService)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _azureStorageService = azureStorageService;
             _authenticationService = authenticationService;
+            _registrationService = registrationService;
             _tokenService = tokenService;
-            _mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -54,25 +45,10 @@ namespace VolunteeringPlatform.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            User user = _mapper.Map<User>(userForRegisterDto);
-
-            if (userForRegisterDto.Photo != null)
-            {
-                var imageProps = await _azureStorageService.UploadAsync(userForRegisterDto.Photo, "users", cancellationToken);
-                user.ImageName = imageProps.ImageName;
-                user.ImageUrl = imageProps.ImageUrl;
-            }
-            else
-            {
-                user.ImageUrl = "https://utmstorageaccount.blob.core.windows.net/users/default.png";
-            }
-
-            var result = await _userManager.CreateAsync(user, userForRegisterDto.Password);
+            var result = await _registrationService.RegisterUser(userForRegisterDto, cancellationToken);
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, RoleConstants.User);
-                await _signInManager.SignInAsync(user, false);
                 return Ok(userForRegisterDto);
             }
             else
@@ -92,26 +68,11 @@ namespace VolunteeringPlatform.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
-            User user = _mapper.Map<Organization>(organizationForRegisterDto);
 
-            if (organizationForRegisterDto.Image != null)
-            {
-                var imageProps = await _azureStorageService.UploadAsync(organizationForRegisterDto.Image, "users", cancellationToken);
-                user.ImageName = imageProps.ImageName;
-                user.ImageUrl = imageProps.ImageUrl;
-            }
-            else
-            {
-                user.ImageUrl = "https://utmstorageaccount.blob.core.windows.net/projects/default.png";
-            }
-
-            var result = await _userManager.CreateAsync(user, organizationForRegisterDto.Password);
+            var result = await _registrationService.RegisterOrganization(organizationForRegisterDto, cancellationToken);
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, RoleConstants.Organization);
-                await _signInManager.SignInAsync(user, false);
                 return Ok(organizationForRegisterDto);
             }
             else
@@ -132,25 +93,10 @@ namespace VolunteeringPlatform.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            User user = _mapper.Map<Volunteer>(volunteerForRegisterDto);
-
-            if (volunteerForRegisterDto.Photo != null)
-            {
-                var imageProps = await _azureStorageService.UploadAsync(volunteerForRegisterDto.Photo, "users", cancellationToken);
-                user.ImageName = imageProps.ImageName;
-                user.ImageUrl = imageProps.ImageUrl;
-            }
-            else
-            {
-                user.ImageUrl = "https://utmstorageaccount.blob.core.windows.net/users/default.png";
-            }
-
-            var result = await _userManager.CreateAsync(user, volunteerForRegisterDto.Password);
+            var result = await _registrationService.RegisterVolunteer(volunteerForRegisterDto, cancellationToken);
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, RoleConstants.Volunteer);
-                await _signInManager.SignInAsync(user, false);
                 return Ok(volunteerForRegisterDto);
             }
             else
