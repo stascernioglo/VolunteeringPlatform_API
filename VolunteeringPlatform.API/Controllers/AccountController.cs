@@ -49,7 +49,7 @@ namespace VolunteeringPlatform.API.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(userForRegisterDto);
+                return Ok();
             }
             else
             {
@@ -73,7 +73,7 @@ namespace VolunteeringPlatform.API.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(organizationForRegisterDto);
+                return Ok();
             }
             else
             {
@@ -97,7 +97,7 @@ namespace VolunteeringPlatform.API.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(volunteerForRegisterDto);
+                return Ok();
             }
             else
             {
